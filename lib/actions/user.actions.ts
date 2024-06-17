@@ -1,5 +1,4 @@
 "use server"
-import Event from "../models/event.model"
 import { FilterQuery, SortOrder } from "mongoose";
 import Bleep from "../models/bleep.model";
 import User from "../models/user.model";
