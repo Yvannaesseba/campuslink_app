@@ -1,19 +1,34 @@
 "use server"
-
+import Event from "../models/event.model"
 import { FilterQuery, SortOrder } from "mongoose";
 import Bleep from "../models/bleep.model";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import { revalidatePath } from "next/cache";
+import Community from "../models/community.model"
+import { handleError } from '@/lib/utils'
+export async function fetchUser(userId: string) {
+  try {
+    connectToDB();
+
+    return await User
+    .findOne({ id: userId})
+    //.populate({
+    // path: 'communities',
+    //  model: Community
+    //})
+  } catch (error:any) {
+    throw new Error(`Failed to fetch user: ${error.message}`)
+  }
+}
 
 interface Params{
-  userId: string;
   username: string;
   name: string;
   bio: string;
   image: string;
+  userId: string;
   path: string;
-
 }
 
 export async function updateUser
@@ -24,9 +39,9 @@ export async function updateUser
     image,
     path,
   } :Params ): Promise<void> {
-  connectToDB();
-
   try{
+    connectToDB();
+
     await User.findOneAndUpdate(
       {id: userId },
       { 
@@ -47,43 +62,34 @@ export async function updateUser
   }
   }
 
-export async function fetchUser(userId: string) {
-  try {
-    connectToDB();
-
-    return await User
-    .findOne({ id: userId})
-    //.populate({
-    // path: 'communities',
-    //  model: Community
-    //})
-  } catch (error:any) {
-    throw new Error(`Failed to fetch user: ${error.message}`)
-  }
-}
 export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
 
     // Find all bleeps authored by user with the given userId 
-
-    // TODO" Populate community
     const bleeps = await User.findOne ({ id: userId })
     .populate({
       path: 'bleeps',
       model: Bleep,
-      populate: {
+      populate: [
+        {
+          path:"community",
+          model: Community,
+          select: "name id image _id", // Select the "name " and "_id" fields from the "Community" model
+        },
+        {
         path: 'children',
         model: Bleep,
         populate: {
           path: 'author',
           model: User,
-          select: 'name image id'
-        }
-      }
-    })
+          select: 'name image id',
+        },
+      },
+      ],
+    });
 
-    return bleeps
+    return bleeps;
   } catch (error:any) {
     throw new Error(`Failed to fetch user posts: ${error.message}`)
   }

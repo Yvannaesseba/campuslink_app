@@ -79,4 +79,4 @@ const Comment = ({ bleepId, currentUserImg, currentUserId}: Props) => {
 )
 }
 
-export default Comment;
+export default CommentForm;

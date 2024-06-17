@@ -1,5 +1,5 @@
-import BleepCard from "@/components/cards/BleepCard";
-import { fetchBleepById } from "@/lib/actions/bleep.actions";
+import EventCard from "@/components/cards/BleepCard";
+import { fetchEventById } from "@/lib/actions/bleep.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -15,34 +15,34 @@ const Page = async ({ params } : {params: { id: string}}) => {
   const userInfo = await fetchUser(user.id)
   if(!userInfo?.onboarded) redirect('/onboarding')
   
-    const bleep = await fetchBleepById(params.id);
+    const event = await fetchEventById(params.id);
     
   return (
     <section className="relative">
     <div>
-    <BleepCard  
-          key={bleep._id}
-          id={bleep._id}
+    <EventCard  
+          key={event._id}
+          id={event._id}
           currentUserId={user?.id || ""}
-          parentId={bleep.parentId}
-          content={bleep.text}
-          author={bleep.author}
-          community={bleep.community}
-          createdAt={bleep.createdAt}
-          comments={bleep.children}
+          parentId={event.parentId}
+          content={event.text}
+          author={event.author}
+          community={event.community}
+          createdAt={event.createdAt}
+          comments={event.children}
           />
     </div>
 
     <div className="mt-7">
       <Comment 
-      bleepId={bleep.id}
+      bleepId={event.id}
       currentUserImg={userInfo.image}
       currentUserId={JSON.stringify(userInfo._id)}
       />
     </div>
     <div className="mt-10">
-      {bleep.children.map((childItem: any) => (
-        <BleepCard  
+      {event.children.map((childItem: any) => (
+        <Card  
           key={childItem._id}
           id={childItem._id}
           currentUserId={childItem?.id || ""}

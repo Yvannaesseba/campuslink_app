@@ -19,26 +19,22 @@ export const sidebarLinks = [
     route: "/create-bleep",
     label: "Create Post",
   },
-  {
-    imgURL: "/assets/chat.svg",
-    route: "/chats",
-    label: "Chats",
-  },
+ // {
+  //  imgURL: "/assets/chat.svg",
+    //route: "/chats",
+   // label: "Chats",
+ // },
   {
     imgURL: "/assets/community.svg",
     route: "/communities",
     label: "Communities",
   },
   {
-    imgURL: "/assets/event.svg",
-    route: "/events",
-    label: "Events",
-  },
-  {
     imgURL: "/assets/user.svg",
     route: "/profile",
     label: "Profile",
   },
+  
 ];
 
 export const profileTabs = [
@@ -47,8 +43,10 @@ export const profileTabs = [
   { value: "tagged", label: "Tagged", icon: "/assets/tag.svg" },
 ];
 
+
 export const communityTabs = [
   { value: "bleeps", label: "Bleeps", icon: "/assets/reply.svg" },
   { value: "members", label: "Members", icon: "/assets/members.svg" },
   { value: "requests", label: "Requests", icon: "/assets/request.svg" },
 ];
+

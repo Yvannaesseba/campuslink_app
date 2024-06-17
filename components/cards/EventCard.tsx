@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
-import DeleteBleep from "../forms/DeleteBleep";
+import DeleteEvent from "../forms/DeleteBleep";
 
 interface Props {
   id: string;
@@ -28,7 +28,7 @@ interface Props {
   isComment?: boolean;
 }
 
-function BleepCard({
+function EventCard({
   id,
   currentUserId,
   parentId,
@@ -78,7 +78,7 @@ function BleepCard({
                   height={24}
                   className='cursor-pointer object-contain'
                 />
-                <Link href={`/bleep/${id}`}>
+                <Link href={`/event/${id}`}>
                   <Image
                     src='/assets/reply.svg'
                     alt='heart'
@@ -104,7 +104,7 @@ function BleepCard({
               </div>
 
               {isComment && comments.length > 0 && (
-                <Link href={`/bleep/${id}`}>
+                <Link href={`/event/${id}`}>
                   <p className='mt-1 text-subtle-medium text-gray-1'>
                     {comments.length} repl{comments.length > 1 ? "ies" : "y"}
                   </p>
@@ -136,7 +136,7 @@ function BleepCard({
             />
           ))}
 
-          <Link href={`/bleep/${id}`}>
+          <Link href={`/event/${id}`}>
             <p className='mt-1 text-subtle-medium text-gray-1'>
               {comments.length} repl{comments.length > 1 ? "ies" : "y"}
             </p>
@@ -167,4 +167,4 @@ function BleepCard({
   );
 }
 
-export default BleepCard;
+export default EventCard;

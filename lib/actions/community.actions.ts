@@ -7,7 +7,6 @@ import Bleep from "../models/bleep.model";
 import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
-import BleepsTab from "@/components/shared/BleepsTab";
 
 export async function createCommunity(
   id: string,

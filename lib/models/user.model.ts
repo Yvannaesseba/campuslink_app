@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema({
       ref: "Bleep",
     }
   ],
+  memorys: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Memory",
+    }
+  ],
+  events: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
+    }
+  ],
   onboarded: {
     type: Boolean,
     default: false,
@@ -36,5 +48,6 @@ const userSchema = new mongoose.Schema({
 })
 
 const User = mongoose.models.User || mongoose.model('User', userSchema)
+
 
 export default User;

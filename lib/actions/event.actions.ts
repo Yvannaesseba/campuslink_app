@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { connectToDB } from "../mongoose";
 
 import User from "../models/user.model";
-import Bleep from "../models/bleep.model";
+import Event from "../models/event.model";
 import Community from "../models/community.model";
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
@@ -15,7 +15,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   const skipAmount = (pageNumber - 1) * pageSize;
 
   // Create a query to fetch the posts that have no parent (top-level bleeps) (a bleep that is not a comment/reply).
-  const postsQuery = Bleep.find({ parentId: { $in: [null, undefined] } })
+  const postsQuery = Event.find({ parentId: { $in: [null, undefined] } })
     .sort({ createdAt: "desc" })
     .skip(skipAmount)
     .limit(pageSize)
@@ -37,7 +37,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     });
 
   // Count the total number of top-level posts (bleeps) i.e., bleeps that are not comments.
-  const totalPostsCount = await Bleep.countDocuments({
+  const totalPostsCount = await Event.countDocuments({
     parentId: { $in: [null, undefined] },
   }); // Get the total count of posts
 
@@ -51,11 +51,15 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 interface Params {
   text: string,
   author: string,
+  venue: string,
+  description: string,
+  date: Date,
+  image: string,
   communityId: string | null,
   path: string,
 }
 
-export async function createBleep({ text, author, communityId, path }: Params
+export async function createEvent({ text, author,venue,description,date, communityId, path }: Params
 ) {
   try {
     connectToDB();
@@ -65,103 +69,107 @@ export async function createBleep({ text, author, communityId, path }: Params
       { _id: 1 }
     );
 
-    const createdBleep = await Bleep.create({
+    const createdEvent = await Event.create({
       text,
       author,
+      venue,
+      description,
+      date,
+      image,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
     });
 
     // Update User model
     await User.findByIdAndUpdate(author, {
-      $push: { bleeps: createdBleep._id },
+      $push: { events: createdEvent._id },
     });
 
     if (communityIdObject) {
       // Update Community model
       await Community.findByIdAndUpdate(communityIdObject, {
-        $push: { bleeps: createdBleep._id },
+        $push: { events: createdEvent._id },
       });
     }
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to create bleep: ${error.message}`);
+    throw new Error(`Failed to create event: ${error.message}`);
   }
 }
 
-async function fetchAllChildBleeps(bleepId: string): Promise<any[]> {
-  const childBleeps = await Bleep.find({ parentId: bleepId });
+async function fetchAllChildEvents(eventId: string): Promise<any[]> {
+  const childEvents = await Event.find({ parentId: eventId });
 
-  const descendantBleeps = [];
-  for (const childBleep of childBleeps) {
-    const descendants = await fetchAllChildBleeps(childBleep._id);
-    descendantBleeps.push(childBleep, ...descendants);
+  const descendantEvents = [];
+  for (const childEvent of childEvents) {
+    const descendants = await fetchAllChildEvents(childEvent._id);
+    descendantEvents.push(childEvent, ...descendants);
   }
 
-  return descendantBleeps;
+  return descendantEvents;
 }
 
-export async function deleteBleep(id: string, path: string): Promise<void> {
+export async function deleteEvent(id: string, path: string): Promise<void> {
   try {
     connectToDB();
 
     // Find the bleep to be deleted (the main bleep)
-    const mainBleep = await Bleep.findById(id).populate("author community");
+    const mainEvent = await Event.findById(id).populate("author community");
 
-    if (!mainBleep) {
-      throw new Error("Bleep not found");
+    if (!mainEvent) {
+      throw new Error("Event not found");
     }
 
     // Fetch all child threads and their descendants recursively
-    const descendantBleeps = await fetchAllChildBleeps(id);
+    const descendantEvents = await fetchAllChildEvents(id);
 
     // Get all descendant thread IDs including the main thread ID and child thread IDs
-    const descendantBleepIds = [
+    const descendantEventIds = [
       id,
-      ...descendantBleeps.map((bleep) => bleep._id),
+      ...descendantEvents.map((event) => event._id),
     ];
 
     // Extract the authorIds and communityIds to update User and Community models respectively
     const uniqueAuthorIds = new Set(
       [
-        ...descendantBleeps.map((bleep) => bleep.author?._id?.toString()), // Use optional chaining to handle possible undefined values
-        mainBleep.author?._id?.toString(),
+        ...descendantEvents.map((event) => event.author?._id?.toString()), // Use optional chaining to handle possible undefined values
+        mainEvent.author?._id?.toString(),
       ].filter((id) => id !== undefined)
     );
 
     const uniqueCommunityIds = new Set(
       [
-        ...descendantBleeps.map((bleep) => bleep.community?._id?.toString()), // Use optional chaining to handle possible undefined values
-        mainBleep.community?._id?.toString(),
+        ...descendantEvents.map((event) => event.community?._id?.toString()), // Use optional chaining to handle possible undefined values
+        mainEvent.community?._id?.toString(),
       ].filter((id) => id !== undefined)
     );
 
     // Recursively delete child threads and their descendants
-    await Bleep.deleteMany({ _id: { $in: descendantBleepIds } });
+    await Event.deleteMany({ _id: { $in: descendantEventIds } });
 
     // Update User model
     await User.updateMany(
       { _id: { $in: Array.from(uniqueAuthorIds) } },
-      { $pull: { bleeps: { $in: descendantBleepIds } } }
+      { $pull: { bleeps: { $in: descendantEventIds } } }
     );
 
     // Update Community model
     await Community.updateMany(
       { _id: { $in: Array.from(uniqueCommunityIds) } },
-      { $pull: { bleeps: { $in: descendantBleepIds } } }
+      { $pull: { events: { $in: descendantEventIds } } }
     );
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to delete bleep: ${error.message}`);
+    throw new Error(`Failed to delete event: ${error.message}`);
   }
 }
 
-export async function fetchBleepById(bleepId: string) {
+export async function fetchEventById(eventId: string) {
   connectToDB();
 
   try {
-    const bleep = await Bleep.findById(bleepId)
+    const event = await Event.findById(eventId)
       .populate({
         path: "author",
         model: User,
@@ -182,7 +190,7 @@ export async function fetchBleepById(bleepId: string) {
           },
           {
             path: "children", // Populate the children field within children
-            model: Bleep, // The model of the nested children (assuming it's the same "Thread" model)
+            model: Event, // The model of the nested children (assuming it's the same "Thread" model)
             populate: {
               path: "author", // Populate the author field within nested children
               model: User,
@@ -193,15 +201,15 @@ export async function fetchBleepById(bleepId: string) {
       })
       .exec();
 
-    return bleep;
+    return event;
   } catch (err) {
     console.error("Error while fetching bleep:", err);
     throw new Error("Unable to fetch bleep");
   }
 }
 
-export async function addCommentToBleep(
-  bleepId: string,
+export async function addCommentToEvent(
+  eventId: string,
   commentText: string,
   userId: string,
   path: string
@@ -210,27 +218,27 @@ export async function addCommentToBleep(
 
   try {
     // Find the original thread by its ID
-    const originalBleep = await Bleep.findById(bleepId);
+    const originalEvent = await Event.findById(eventId);
 
-    if (!originalBleep) {
+    if (!originalEvent) {
       throw new Error("Bleep not found");
     }
 
     // Create the new comment thread
-    const commentBleep = new Bleep({
+    const commentBleep = new Event({
       text: commentText,
       author: userId,
-      parentId: bleepId, // Set the parentId to the original thread's ID
+      parentId: eventId, // Set the parentId to the original thread's ID
     });
 
     // Save the comment thread to the database
-    const savedCommentBleep = await commentBleep.save();
+    const savedCommentBleep = await commentEvent.save();
 
     // Add the comment bleep's ID to the original thread's children array
-    originalBleep.children.push(savedCommentBleep._id);
+    originalEvent.children.push(savedCommentEvent._id);
 
     // Save the updated original thread to the database
-    await originalBleep.save();
+    await originalEvent.save();
 
     revalidatePath(path);
   } catch (err) {

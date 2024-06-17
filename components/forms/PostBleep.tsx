@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from "zod";
 import { usePathname, useRouter } from "next/navigation";
-
+import { useOrganization } from '@clerk/nextjs';
 //import { updateUser } from "@/lib/actions/user.actions";
 import { BleepValidation } from '@/lib/validations/bleep';
 import { createBleep } from '@/lib/actions/bleep.actions';
@@ -27,6 +27,7 @@ interface Props {
 function PostBleep({ userId} : { userId: string}) {
   const router = useRouter();
   const pathname = usePathname();
+  const { organization} = useOrganization();
 
   const form = useForm({
     resolver: zodResolver(BleepValidation), 
@@ -40,7 +41,7 @@ function PostBleep({ userId} : { userId: string}) {
     await createBleep({
       text: values.bleep,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname
     });
 
