@@ -34,7 +34,16 @@ export const sidebarLinks = [
     route: "/profile",
     label: "Profile",
   },
-  
+  {
+    imgURL: "/assets/event.svg",
+    route:"https://ictuniversity.org/portal-login/",
+    label:"Moodle",
+  },
+  {
+    imgURl:"/assets/event.svg",
+    route:"https://www.chatbase.co/chatbot-iframe/UkWj_MNQ51CanRiX-zyOr",
+    label:"Campus bot",
+  },
 ];
 
 export const profileTabs = [

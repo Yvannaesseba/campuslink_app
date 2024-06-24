@@ -1,21 +1,31 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-
 import { connectToDB } from "../mongoose";
-
 import User from "../models/user.model";
 import Bleep from "../models/bleep.model";
 import Community from "../models/community.model";
 
-export async function fetchPosts(pageNumber = 1, pageSize = 20) {
+export async function fetchPosts({
+  searchString = "",
+  pageNumber = 1,
+  pageSize = 20,
+}: {
+  searchString?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}) {
   connectToDB();
 
   // Calculate the number of posts to skip based on the page number and page size.
   const skipAmount = (pageNumber - 1) * pageSize;
 
   // Create a query to fetch the posts that have no parent (top-level bleeps) (a bleep that is not a comment/reply).
-  const postsQuery = Bleep.find({ parentId: { $in: [null, undefined] } })
+  // If searchString is provided, filter posts by content.
+  const postsQuery = Bleep.find({
+    parentId: { $in: [null, undefined] },
+    text: { $regex: searchString, $options: "i" }, // Case-insensitive search
+  })
     .sort({ createdAt: "desc" })
     .skip(skipAmount)
     .limit(pageSize)
@@ -39,24 +49,30 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   // Count the total number of top-level posts (bleeps) i.e., bleeps that are not comments.
   const totalPostsCount = await Bleep.countDocuments({
     parentId: { $in: [null, undefined] },
-  }); // Get the total count of posts
+    text: { $regex: searchString, $options: "i" }, // Case-insensitive search
+  });
 
   const posts = await postsQuery.exec();
-
   const isNext = totalPostsCount > skipAmount + posts.length;
 
   return { posts, isNext };
 }
 
 interface Params {
-  text: string,
-  author: string,
-  communityId: string | null,
-  path: string,
+  text: string;
+  file?: [];
+  author: string;
+  communityId: string | null;
+  path: string;
 }
 
-export async function createBleep({ text, author, communityId, path }: Params
-) {
+export async function createBleep({
+  text,
+  author,
+  communityId,
+  path,
+  file,
+}: Params) {
   try {
     connectToDB();
 
@@ -67,6 +83,7 @@ export async function createBleep({ text, author, communityId, path }: Params
 
     const createdBleep = await Bleep.create({
       text,
+      file,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
     });

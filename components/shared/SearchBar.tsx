@@ -18,7 +18,9 @@ function Searchbar({ routeType }: Props) {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (search) {
-        router.push(`/${routeType}?q=` + search);
+        // Encode the search query to ensure special characters are properly handled
+        const encodedSearch = encodeURIComponent(search);
+        router.push(`/${routeType}?q=` + encodedSearch);
       } else {
         router.push(`/${routeType}`);
       }
