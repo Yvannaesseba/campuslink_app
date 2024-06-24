@@ -60,7 +60,6 @@ export async function fetchPosts({
 
 interface Params {
   text: string;
-  file?: [];
   author: string;
   communityId: string | null;
   path: string;
@@ -71,7 +70,6 @@ export async function createBleep({
   author,
   communityId,
   path,
-  file,
 }: Params) {
   try {
     connectToDB();
@@ -83,7 +81,6 @@ export async function createBleep({
 
     const createdBleep = await Bleep.create({
       text,
-      file,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
     });

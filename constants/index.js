@@ -44,6 +44,11 @@ export const sidebarLinks = [
     route:"https://www.chatbase.co/chatbot-iframe/UkWj_MNQ51CanRiX-zyOr",
     label:"Campus bot",
   },
+  {
+    imgURL: "/assets/user.svg",
+    route: "/profile",
+    label: "Profile",
+  },
 ];
 
 export const profileTabs = [

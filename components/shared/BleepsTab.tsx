@@ -31,7 +31,6 @@ const BleepsTab = async ({ currentUserId, accountId, accountType }: Props) => {
           currentUserId={currentUserId} // Current user's ID passed down
           parentId={bleep.parentId} // Parent ID of the bleep (if exists)
           content={bleep.text} // Bleep content
-          file={bleep?.file} // Optional file associated with the bleep
           author={ // Determining author based on account type
             accountType === 'User' ? // If accountType is 'User'
               { name: result.name, image: result.image, id: result.id } : // Use result's user info

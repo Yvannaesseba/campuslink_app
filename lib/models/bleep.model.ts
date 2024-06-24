@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const bleepSchema = new mongoose.Schema({
 text: { type: String, required: true},
-file: { type: String, required: false},
 author: {
 type: mongoose.Schema.Types.ObjectId,
 ref: 'User',

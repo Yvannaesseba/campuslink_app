@@ -9,7 +9,6 @@ interface Props {
   currentUserId: string;
   parentId: string | null;
   content: string;
-  file: []; // Array of files
   author: {
     name: string;
     image: string;
@@ -34,7 +33,6 @@ function BleepCard({
   currentUserId,
   parentId,
   content,
-  file = [],
   author,
   community,
   createdAt,
@@ -73,19 +71,6 @@ function BleepCard({
 
             {/* Bleep content */}
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
-
-            {/* Displaying uploaded file if available */}
-            {Array.isArray(file) && file.length > 0 && (
-              <div className="flex justify-center">
-                <Image
-                  src={URL.createObjectURL(file[0])}
-                  alt="Uploaded file preview"
-                  width={300}
-                  height={200}
-                  className="max-w-full rounded-md"
-                />
-              </div>
-            )}
 
             {/* Actions (like, reply, repost, share) */}
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
