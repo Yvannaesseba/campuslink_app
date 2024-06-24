@@ -19,11 +19,11 @@ export const sidebarLinks = [
     route: "/create-bleep",
     label: "Create Post",
   },
- // {
-  //  imgURL: "/assets/chat.svg",
-    //route: "/chats",
-   // label: "Chats",
- // },
+  {
+  imgURL: "/assets/chat.svg",
+  route: "https://www.chatbase.co/chatbot-iframe/UkWj_MNQ51CanRiX-zyOr",
+  label: "AI-bot",
+  },
   {
     imgURL: "/assets/community.svg",
     route: "/communities",
@@ -38,16 +38,6 @@ export const sidebarLinks = [
     imgURL: "/assets/event.svg",
     route:"https://ictuniversity.org/portal-login/",
     label:"Moodle",
-  },
-  {
-    imgURl:"/assets/event.svg",
-    route:"https://www.chatbase.co/chatbot-iframe/UkWj_MNQ51CanRiX-zyOr",
-    label:"Campus bot",
-  },
-  {
-    imgURL: "/assets/user.svg",
-    route: "/profile",
-    label: "Profile",
   },
 ];
 

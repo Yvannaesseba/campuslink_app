@@ -72,7 +72,7 @@ function PostBleep({ userId }: Props) {
         />
 
         <Button type='submit' className='bg-primary-500'>
-          Post Thread
+          Post Bleep
         </Button>
       </form>
     </Form>
