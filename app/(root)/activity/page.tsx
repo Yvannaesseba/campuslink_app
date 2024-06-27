@@ -15,14 +15,14 @@ async function Page(): Promise<JSX.Element | null> {
   const activity = await getActivity(userInfo._id);
 
   return (
-    <section>
+    <div>
       <h1 className="head-text mb-10">Your Recent Activity</h1>
 
-      <section className="mt-10 flex flex-col gap-5">
+      <div className="mt-10 flex flex-col gap-5">
         {activity.length > 0 ? (
           <>
             {activity.map((activity) => (
-              <Link key={activity._id} href={/bleep/${activity.parentId}}>
+              <Link key={activity._id} href={`/bleep/${activity.parentId}`}>
                 <article className="activity-card flex items-center gap-4 p-4 rounded-md bg-white shadow-md">
                   <Image
                     src={activity.author.image}
@@ -57,8 +57,8 @@ async function Page(): Promise<JSX.Element | null> {
             </p>
           </div>
         )}
-      </section>
-    </section>
+      </div>
+    </div>
   );
 }
 

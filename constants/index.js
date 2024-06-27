@@ -21,7 +21,7 @@ export const sidebarLinks = [
   },
   {
   imgURL: "/assets/chat.svg",
-  route: "https://www.chatbase.co/chatbot-iframe/UkWj_MNQ51CanRiX-zyOr",
+  route: "https://www.chatbase.co/chatbot-iframe/A46UjjCXKGulr6DhVcdmJ",
   label: "AI-bot",
   },
   {
