@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CampusLink
 
-## Getting Started
+**A university-focused social networking platform for communication and community engagement**
 
-First, run the development server:
+*Individual BSc Software Engineering Final Project | The ICT University | 2024*
+
+## Overview
+
+CampusLink is a university-focused social networking web application developed as my final-year BSc Software Engineering project.
+
+The project explored how a dedicated platform could support communication and community interaction within a university environment. Users can create profiles, share and interact with posts, find other users, and participate in interest-based communities.
+
+The project covered the software development process from requirements gathering and system design through to implementation and testing.
+
+---
+
+## The Problem
+
+General social media platforms support communication, but they are not designed specifically around the structure and needs of a university community.
+
+CampusLink was designed as a dedicated environment where university members could connect, share information and participate in communities within a campus-focused platform.
+
+---
+
+## Key Features
+
+The application includes:
+
+- User registration and authentication
+- User profiles and profile editing
+- Home/news feed
+- Creating and viewing posts
+- Commenting on posts
+- User search
+- Community search
+- Community creation and management
+- Joining communities
+- Adding community members
+- Viewing posts within individual communities
+
+---
+
+## Requirements and System Design
+
+Before implementation, I carried out requirements analysis to understand the communication needs of potential university users.
+
+The project included:
+
+- Functional and non-functional requirements
+- Use cases
+- Class diagrams
+- Sequence diagrams
+- System design specifications
+- Implementation and testing
+
+This process helped translate the initial problem into defined system requirements before development.
+
+---
+
+## Technologies
+
+- **Next.js** — application framework
+- **React** — user interface
+- **MongoDB** — data storage
+- **Clerk** — authentication and user management
+
+---
+
+## Project Structure
+
+```text
+campuslink_app/
+├── app/              # Application pages and routes
+├── components/       # Reusable interface components
+├── constants/        # Application constants
+├── hooks/            # Custom hooks
+├── lib/              # Shared application logic
+├── public/           # Static assets
+├── middleware.ts
+├── package.json
+└── README.md
+```
+
+---
+
+## What I Learned
+
+CampusLink gave me experience of developing a larger application from requirements through to implementation.
+
+The project strengthened my understanding of:
+
+- translating user needs into system requirements;
+- designing a system before implementation;
+- building reusable web components;
+- integrating authentication and data storage;
+- structuring a full-stack web application;
+- testing and documenting a software project.
+
+---
+
+## Limitations and Improvements
+
+CampusLink was developed as an undergraduate final-year project rather than a production social networking platform.
+
+If I revisited the project, I would focus on:
+
+- expanding automated testing;
+- strengthening input validation and error handling;
+- reviewing accessibility and responsive design;
+- improving technical documentation;
+- reviewing dependencies and deployment configuration.
+
+---
+
+## Running Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Yvannaesseba/campuslink_app.git
+cd campuslink_app
+```
+
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will normally be available at `localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Some functionality requires the appropriate environment variables for services such as authentication and database access.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+## Author
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**Emmanuelle Yvanna Esseba Ayangma**  
+BSc Software Engineering — The ICT University
